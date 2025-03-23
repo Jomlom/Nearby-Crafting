@@ -1,18 +1,17 @@
 {
 	"schemaVersion": 1,
-	"id": "nearby-crafting",
+	"id": "nearbycrafting",
 	"version": "${version}",
 	"name": "Nearby Crafting",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Allows the crafting table to access nearby chests or other containers, because that's how it should be!",
 	"authors": [
-		"Me!"
+		"Jomlom"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/Jomlom/Nearby-Crafting"
 	},
-	"license": "CC0-1.0",
-	"icon": "assets/nearby-crafting/icon.png",
+	"license": "MIT",
+	"icon": "assets/nearbycrafting/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
@@ -20,22 +19,27 @@
 		],
 		"client": [
 			"com.jomlom.nearbycrafting.NearbyCraftingClient"
+		],
+		"modmenu": [
+			"com.jomlom.nearbycrafting.clientUtil.ModMenuIntegration"
 		]
 	},
 	"mixins": [
-		"nearby-crafting.mixins.json",
+		"nearbycrafting.mixins.json",
 		{
-			"config": "nearby-crafting.client.mixins.json",
+			"config": "nearbycrafting.client.mixins.json",
 			"environment": "client"
 		}
 	],
 	"depends": {
 		"fabricloader": ">=0.16.10",
-		"minecraft": "~1.21.4",
+		"minecraft": ">=1.21.2 <=1.21.4",
 		"java": ">=21",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"recipebookaccess": ">=1.0.1",
+		"yet_another_config_lib_v3": ">=3.6.4+1.21.4-fabric <=3.6.5+1.21.4-fabric",
+		"modmenu": ">=12.0.0"
 	},
 	"suggests": {
-		"another-mod": "*"
 	}
 }

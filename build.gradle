@@ -11,18 +11,18 @@ base {
 }
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
+	maven { url 'https://api.modrinth.com/maven' }
+	maven {
+		name 'Xander Maven'
+		url 'https://maven.isxander.dev/releases'
+	}
 }
 
 loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"nearby-crafting" {
+		"nearbycrafting" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
@@ -38,7 +38,10 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	
+	//modImplementation "maven.modrinth:recipe-book-access-api:1.0.1"
+	modImplementation files("libs/recipebookaccess-1.0.1.jar")
+	modImplementation "maven.modrinth:modmenu:13.0.3"
+	modImplementation "dev.isxander:yet-another-config-lib:3.6.5+1.21.4-fabric"
 }
 
 processResources {
