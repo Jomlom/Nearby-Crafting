@@ -34,7 +34,7 @@ Use the `/nearbycrafting` command to customize server-wide behavior for Nearby C
 /nearbycrafting <target> <action> [value]
 ```
 
-## Command Structure
+### Command Structure
 
 ### `<target>`
 This defines which crafting scenario you're configuring:
@@ -48,7 +48,7 @@ Defines the type of action you want to perform:
 - `setReach <number>` – Sets the radius (in blocks) from which inventories are accessible.
 - `getReach` – Displays the current reach radius.
 
-## Examples
+### Examples
 
 Enable crafting table inventory access:
 ```
