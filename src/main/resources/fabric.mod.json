@@ -37,8 +37,8 @@
 		"java": ">=21",
 		"fabric-api": "*",
 		"recipebookaccess": ">=1.0.1",
-		"yet_another_config_lib_v3": ">=3.6.1+1.21-fabric <=3.6.5+1.21.1-fabric",
 		"modmenu": ">=11.0.0"
+		"yet_another_config_lib_v3": ">=3.6.4+1.21.4-fabric",
 	},
 	"suggests": {
 	}
