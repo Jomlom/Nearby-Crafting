@@ -38,10 +38,10 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	//modImplementation "maven.modrinth:recipe-book-access-api:1.0.1"
+	//modImplementation "maven.modrinth:recipe-book-access-api:1.0.2"
 	modImplementation files("libs/recipebookaccess-1.0.2.jar")
-	modImplementation "maven.modrinth:modmenu:13.0.3"
-	modImplementation "dev.isxander:yet-another-config-lib:3.6.5+1.21.4-fabric"
+	modImplementation "maven.modrinth:modmenu:7.2.2"
+	modImplementation "dev.isxander:yet-another-config-lib:3.6.5+1.20.1-fabric"
 }
 
 processResources {
