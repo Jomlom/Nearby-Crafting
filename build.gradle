@@ -41,7 +41,7 @@ dependencies {
 	//modImplementation "maven.modrinth:recipe-book-access-api:1.0.1"
 	modImplementation files("libs/recipebookaccess-1.0.2.jar")
 	modImplementation "maven.modrinth:modmenu:13.0.3"
-	modImplementation "dev.isxander:yet-another-config-lib:3.6.5+1.21.4-fabric"
+	modImplementation "dev.isxander:yet-another-config-lib:3.6.5+1.21.5-fabric"
 }
 
 processResources {
