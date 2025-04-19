@@ -16,6 +16,9 @@ repositories {
 		name 'Xander Maven'
 		url 'https://maven.isxander.dev/releases'
 	}
+	maven {
+		url = "https://maven.blamejared.com"
+	}
 }
 
 loom {
@@ -38,10 +41,15 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	//modImplementation "maven.modrinth:recipe-book-access-api:1.0.1"
-	modImplementation files("libs/recipebookaccess-1.0.2.jar")
+	//modImplementation "maven.modrinth:recipe-book-access-api:1.1.0"
+	modImplementation files("libs/recipebookaccess-1.1.0.jar")
 	modImplementation "maven.modrinth:modmenu:11.0.3"
 	modImplementation "dev.isxander:yet-another-config-lib:3.6.1+1.21-fabric"
+
+	// JEI compat
+	modImplementation("mezz.jei:jei-1.21-fabric:19.8.2.99") {
+		transitive = false
+	}
 }
 
 processResources {
