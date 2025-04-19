@@ -36,7 +36,7 @@
 		"minecraft": "~1.20.1",
 		"java": ">=17",
 		"fabric-api": "*",
-		"recipebookaccess": ">=1.0.2",
+		"recipebookaccess": ">=1.1.0",
 		"yet_another_config_lib_v3": ">=3.6.4+1.20.1-fabric",
 		"modmenu": ">=7.0.0"
 	},
