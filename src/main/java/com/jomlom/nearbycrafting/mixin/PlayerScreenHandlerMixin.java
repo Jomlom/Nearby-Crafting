@@ -18,6 +18,8 @@ import java.util.List;
 public abstract class PlayerScreenHandlerMixin implements RecipeBookInventoryProvider {
 
     @Shadow @Final private PlayerEntity owner;
+    @Shadow @Final public static int CRAFTING_INPUT_START;
+    @Shadow @Final public static int CRAFTING_INPUT_END;
 
     @Override
     public List<Inventory> getInventoriesForAutofill() {
@@ -35,4 +37,15 @@ public abstract class PlayerScreenHandlerMixin implements RecipeBookInventoryPro
         inventories.add(owner.getInventory());
         return inventories;
     }
+
+    @Override
+    public int inputSlotsStartIndex() {
+        return CRAFTING_INPUT_START;
+    }
+
+    @Override
+    public int inputSlotsEndIndex() {
+        return CRAFTING_INPUT_END;
+    }
+
 }
