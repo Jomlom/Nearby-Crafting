@@ -8,6 +8,9 @@ import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class NearbyCraftingConfig {
 
     public static final ConfigClassHandler<NearbyCraftingConfig> HANDLER =
@@ -21,6 +24,8 @@ public class NearbyCraftingConfig {
                     .build();
 
     public static int defaultReach = 8;
+
+    @SerialEntry public static Map<String, Map<String, Boolean>> containerBlockToggles = new HashMap<>();
 
     @SerialEntry public static boolean craftingPlayerCanReach = true;
     @SerialEntry public static int craftingPlayerReach = defaultReach;
