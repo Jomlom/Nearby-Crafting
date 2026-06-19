@@ -22,7 +22,7 @@ public abstract class PlayerScreenHandlerMixin implements RecipeBookInventoryPro
     @Override
     public List<Inventory> getInventoriesForAutofill() {
         if (!NearbyCraftingConfig.craftingPlayerCanReach) { return List.of(owner.getInventory()); }
-        World world = owner.getEntityWorld();
+        World world = owner.getWorld();
         BlockPos playerPos = owner.getBlockPos();
         List<Inventory> inventories = new ArrayList<>();
         int radius = NearbyCraftingConfig.craftingPlayerReach;

@@ -40,8 +40,8 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	//modImplementation "maven.modrinth:recipe-book-access-api:1.0.1"
 	modImplementation files("libs/recipebookaccess-1.1.0.jar")
-	modImplementation "maven.modrinth:modmenu:17.0.0"
-	modImplementation "dev.isxander:yet-another-config-lib:3.8.1+1.21.11-fabric"
+	modImplementation "maven.modrinth:modmenu:15.0.1"
+	modImplementation "dev.isxander:yet-another-config-lib:3.7.1+1.21.6-fabric"
 }
 
 processResources {
