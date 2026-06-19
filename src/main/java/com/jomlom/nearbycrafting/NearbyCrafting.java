@@ -10,6 +10,8 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.IdentifierArgumentType;
+import net.minecraft.command.permission.Permission;
+import net.minecraft.command.permission.PermissionLevel;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.command.CommandManager;
@@ -44,7 +46,7 @@ public class NearbyCrafting implements ModInitializer {
 			dispatcher.register(CommandManager.literal("nearbycrafting")
 
 					// Operator permission
-					.requires(source -> source.hasPermissionLevel(2))
+					.requires(source -> source.getPermissions().hasPermission(new Permission.Level(PermissionLevel.GAMEMASTERS)))
 
 					// Crafting Table subcommand
 					.then(CommandManager.literal("craftingTable")
