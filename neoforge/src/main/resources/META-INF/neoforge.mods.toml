@@ -6,6 +6,7 @@ license="MIT"
 modId="${mod_id}"
 version="${version}"
 displayName="${mod_name}"
+authors="Jomlom"
 logoFile="assets/nearbycrafting/icon.png"
 description='''
 Allows the crafting table to access nearby chests or other containers, because that's how it should be!
