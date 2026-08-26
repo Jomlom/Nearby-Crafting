@@ -1,0 +1,61 @@
+plugins {
+	id 'fabric-loom' version '1.14.10'
+}
+
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"nearbycrafting" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
+
+sourceSets {
+	main {
+		java.srcDir project(':common').file('src/main/java')
+		resources.srcDir project(':common').file('src/main/resources')
+	}
+	client {
+		java.srcDir project(':common').file('src/client/java')
+		resources.srcDir project(':common').file('src/client/resources')
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-${rootProject.parchment_minecraft_version}:${rootProject.parchment_version}@zip")
+	}
+	modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
+
+	modImplementation "com.jomlom.recipebookaccess:recipebookaccess-fabric:${rootProject.rba_version}"
+	modImplementation "maven.modrinth:modmenu:16.0.1"
+	modImplementation "dev.isxander:yet-another-config-lib:3.8.2+1.21.10-fabric"
+
+	modImplementation("mezz.jei:jei-1.21.10-fabric:26.3.0.31") {
+		transitive = false
+	}
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": inputs.properties.version, "mod_name": rootProject.mod_name
+	}
+}
+
+jar {
+	inputs.property "archivesName", project.base.archivesName
+
+	from(rootProject.file("LICENSE")) {
+		rename { "${it}_${inputs.properties.archivesName}" }
+	}
+}
