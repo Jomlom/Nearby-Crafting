@@ -1,0 +1,26 @@
+plugins {
+	id 'fabric-loom' version '1.10.5'
+}
+
+loom {
+	splitEnvironmentSourceSets()
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-${rootProject.parchment_minecraft_version}:${rootProject.parchment_version}@zip")
+	}
+
+	modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+
+	modImplementation "com.jomlom.recipebookaccess:recipebookaccess-fabric:${rootProject.rba_version}"
+
+	modCompileOnly("mezz.jei:jei-1.20.1-fabric:15.20.0.101") {
+		transitive = false
+	}
+}
+
+tasks.jar { enabled = false }
+tasks.named('sourcesJar') { enabled = false }

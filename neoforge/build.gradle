@@ -1,0 +1,80 @@
+plugins {
+	id 'net.neoforged.moddev.legacyforge' version '2.0.91'
+}
+
+sourceSets {
+	main {
+		java.srcDir project(':common').file('src/main/java')
+		resources.srcDir project(':common').file('src/main/resources')
+	}
+}
+
+dependencies {
+	implementation "com.jomlom.recipebookaccess:recipebookaccess-neoforge:${rootProject.rba_version}"
+
+	compileOnly("mezz.jei:jei-1.20.1-forge:15.56.0.205") {
+		transitive = false
+	}
+}
+
+legacyForge {
+	version = "${rootProject.minecraft_version}-${rootProject.neoforge_version}"
+
+	parchment {
+		minecraftVersion = rootProject.parchment_minecraft_version
+		mappingsVersion = rootProject.parchment_version
+	}
+
+	mods {
+		"nearbycrafting" {
+			sourceSet sourceSets.main
+		}
+	}
+
+	runs {
+		client {
+			client()
+		}
+		server {
+			server()
+		}
+	}
+}
+
+mixin {
+	add sourceSets.main, "nearbycrafting.refmap.json"
+	config "nearbycrafting.mixins.json"
+}
+
+dependencies {
+	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("META-INF/mods.toml") {
+		expand "version": inputs.properties.version, "mod_name": rootProject.mod_name, "mod_id": rootProject.mod_id
+	}
+}
+
+jar {
+	inputs.property "archivesName", project.base.archivesName
+
+	manifest.attributes([
+			"MixinConfigs": "nearbycrafting.mixins.json"
+	])
+
+	from(rootProject.file("LICENSE")) {
+		rename { "${it}_${inputs.properties.archivesName}" }
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId = "${rootProject.archives_base_name}-neoforge"
+			from components.java
+		}
+	}
+}
