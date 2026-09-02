@@ -31,57 +31,23 @@ public class NearbyCraftingCommon {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static void detectContainerBlocks() {
-        for (BlockEntityType<?> beType : BuiltInRegistries.BLOCK_ENTITY_TYPE) {
-            ResourceLocation beId = BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(beType);
-            if (beId == null) continue;
+        Map<String, Map<String, Boolean>> toggles = Services.CONFIG.containerBlockToggles();
 
-            BlockState validState = null;
-
-            for (Block block : BuiltInRegistries.BLOCK) {
-                if (block instanceof BaseEntityBlock blockWE) {
-                    BlockEntity be = null;
-                    try {
-                        be = blockWE.newBlockEntity(net.minecraft.core.BlockPos.ZERO, block.defaultBlockState());
-                    } catch (Exception ignored) {}
-
-                    if (be != null && be.getType() == beType) {
-                        validState = block.defaultBlockState();
-                        break;
-                    }
-                }
-            }
-
-            if (validState == null) {
-                continue;
-            }
+        for (Block block : BuiltInRegistries.BLOCK) {
+            if (!(block instanceof BaseEntityBlock blockWithEntity)) continue;
 
             BlockEntity blockEntity;
             try {
-                blockEntity = beType.create(net.minecraft.core.BlockPos.ZERO, validState);
-            } catch (Exception e) {
+                blockEntity = blockWithEntity.newBlockEntity(net.minecraft.core.BlockPos.ZERO, block.defaultBlockState());
+            } catch (Exception ignored) {
                 continue;
             }
 
             if (!(blockEntity instanceof Container)) continue;
 
-            for (Block block : BuiltInRegistries.BLOCK) {
-                if (block instanceof BaseEntityBlock blockWE) {
-                    BlockEntity be = null;
-                    try {
-                        be = blockWE.newBlockEntity(net.minecraft.core.BlockPos.ZERO, block.defaultBlockState());
-                    } catch (Exception ignored) {}
-
-                    if (be != null && be.getType() == beType) {
-                        ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(block);
-                        String namespace = blockId.getNamespace();
-                        String blockIdStr = blockId.toString();
-
-                        Map<String, Map<String, Boolean>> toggles = Services.CONFIG.containerBlockToggles();
-                        toggles.putIfAbsent(namespace, new HashMap<>());
-                        toggles.get(namespace).putIfAbsent(blockIdStr, true);
-                    }
-                }
-            }
+            ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(block);
+            toggles.computeIfAbsent(blockId.getNamespace(), unused -> new HashMap<>())
+                    .putIfAbsent(blockId.toString(), true);
         }
     }
 
