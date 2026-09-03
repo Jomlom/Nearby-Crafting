@@ -20,6 +20,10 @@ dependencies {
 	modCompileOnly("mezz.jei:jei-1.21-fabric:19.8.2.99") {
 		transitive = false
 	}
+
+	modCompileOnly("maven.modrinth:farmers-delight-refabricated:1.21.1-3.1.2") {
+		transitive = false
+	}
 }
 
 tasks.jar { enabled = false }

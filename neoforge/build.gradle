@@ -15,6 +15,10 @@ dependencies {
 	implementation("mezz.jei:jei-1.21.1-neoforge:19.8.4.110") {
 		transitive = false
 	}
+
+	compileOnly("maven.modrinth:farmers-delight:1.21-1.2.4") {
+		transitive = false
+	}
 }
 
 neoForge {

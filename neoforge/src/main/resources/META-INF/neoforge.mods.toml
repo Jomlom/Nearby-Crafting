@@ -15,6 +15,9 @@ Allows the crafting table to access nearby chests or other containers, because t
 [[mixins]]
 config="nearbycrafting.mixins.json"
 
+[[mixins]]
+config="nearbycrafting.farmersdelight.mixins.json"
+
 [[dependencies.${mod_id}]]
     modId="neoforge"
     type="required"
