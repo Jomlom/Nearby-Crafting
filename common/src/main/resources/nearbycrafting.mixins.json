@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.jomlom.nearbycrafting.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "CraftingScreenHandlerMixin",
+    "PlayerScreenHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
