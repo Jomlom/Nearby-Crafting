@@ -42,6 +42,10 @@ dependencies {
 	modImplementation("mezz.jei:jei-1.21.11-fabric:27.30.0.79") {
 		transitive = false
 	}
+
+	modCompileOnly("maven.modrinth:farmers-delight-refabricated:1.21.11-3.6.16") {
+		transitive = false
+	}
 }
 
 processResources {
