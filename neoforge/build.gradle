@@ -1,0 +1,53 @@
+plugins {
+	id 'net.neoforged.moddev' version '2.0.146'
+}
+
+sourceSets {
+	main {
+		java.srcDir project(':common').file('src/main/java')
+		resources.srcDir project(':common').file('src/main/resources')
+	}
+}
+
+dependencies {
+	implementation files(rootProject.file("libs/recipebookaccess-neoforge-1.2.0.jar"))
+
+	implementation("mezz.jei:jei-26.2-neoforge:30.29.0.201") {
+		transitive = false
+	}
+}
+
+neoForge {
+	version = rootProject.neoforge_version
+
+	mods {
+		"nearbycrafting" {
+			sourceSet sourceSets.main
+		}
+	}
+
+	runs {
+		client {
+			client()
+		}
+		server {
+			server()
+		}
+	}
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("META-INF/neoforge.mods.toml") {
+		expand "version": inputs.properties.version, "mod_name": rootProject.mod_name, "mod_id": rootProject.mod_id
+	}
+}
+
+jar {
+	inputs.property "archivesName", project.base.archivesName
+
+	from(rootProject.file("LICENSE")) {
+		rename { "${it}_${inputs.properties.archivesName}" }
+	}
+}

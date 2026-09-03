@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"id": "nearbycrafting",
+	"version": "${version}",
+	"name": "${mod_name}",
+	"description": "Allows the crafting table to access nearby chests or other containers, because that's how it should be!",
+	"authors": [
+		"Jomlom"
+	],
+	"contact": {
+		"sources": "https://github.com/Jomlom/Nearby-Crafting"
+	},
+	"license": "MIT",
+	"icon": "assets/nearbycrafting/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.jomlom.nearbycrafting.fabric.NearbyCraftingFabric"
+		],
+		"client": [
+			"com.jomlom.nearbycrafting.fabric.NearbyCraftingFabricClient"
+		],
+		"modmenu": [
+			"com.jomlom.nearbycrafting.clientUtil.ModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"nearbycrafting.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": ">=26.1 <=26.2",
+		"java": ">=25",
+		"fabric-api": "*",
+		"recipebookaccess": ">=1.2.0",
+		"modmenu": ">=18.0.0",
+		"yet_another_config_lib_v3": ">=3.9.0+26.1-fabric"
+	}
+}
