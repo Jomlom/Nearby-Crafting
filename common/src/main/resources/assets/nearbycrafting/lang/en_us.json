@@ -1,0 +1,6 @@
+{
+  "nearbycrafting.config.craftingTableCanReach": "Crafting Table Enabled",
+  "nearbycrafting.config.craftingTableReach": "Crafting Table Reach Radius",
+  "nearbycrafting.config.craftingPlayerCanReach": "Player Inventory Crafting Enabled",
+  "nearbycrafting.config.craftingPlayerReach": "Player Crafting Reach Radius"
+}
