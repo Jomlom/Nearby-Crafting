@@ -15,16 +15,20 @@ public class NearbyCraftingConfigNeoForge {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
         CRAFTING_PLAYER_CAN_REACH = builder
+                .translation("nearbycrafting.config.craftingPlayerCanReach")
                 .comment("Allows players to reach nearby item containers and use their contents for crafting.")
                 .define("craftingPlayerCanReach", true);
         CRAFTING_PLAYER_REACH = builder
+                .translation("nearbycrafting.config.craftingPlayerReach")
                 .comment("Radius (in blocks) which players can reach item containers.")
                 .defineInRange("craftingPlayerReach", 8, 0, 50);
 
         CRAFTING_TABLE_CAN_REACH = builder
+                .translation("nearbycrafting.config.craftingTableCanReach")
                 .comment("Allows crafting tables to reach nearby item containers and use their contents for crafting.")
                 .define("craftingTableCanReach", true);
         CRAFTING_TABLE_REACH = builder
+                .translation("nearbycrafting.config.craftingTableReach")
                 .comment("Radius (in blocks) which crafting tables can reach item containers.")
                 .defineInRange("craftingTableReach", 8, 0, 50);
 
