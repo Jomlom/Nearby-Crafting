@@ -68,6 +68,6 @@ public class NearbyCraftingConfigServiceFabric implements NearbyCraftingConfigSe
 
     @Override
     public void save() {
-        NearbyCraftingConfigFabric.HANDLER.save();
+        NearbyCraftingConfigFabric.save();
     }
 }
