@@ -33,7 +33,6 @@ dependencies {
 
 	implementation files(rootProject.file("libs/recipebookaccess-1.1.1.jar"))
 	implementation "maven.modrinth:modmenu:20.0.1"
-	implementation "dev.isxander:yet-another-config-lib:3.9.6+26.2-fabric"
 
 	implementation("mezz.jei:jei-26.2-fabric:30.29.0.201") {
 		transitive = false
