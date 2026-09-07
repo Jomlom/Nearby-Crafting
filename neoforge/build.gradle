@@ -10,7 +10,7 @@ sourceSets {
 }
 
 dependencies {
-	implementation files(rootProject.file("libs/recipebookaccess-neoforge-1.2.0.jar"))
+	implementation files(rootProject.file("libs/recipebookaccess-neoforge-1.3.0.jar"))
 
 	implementation("mezz.jei:jei-26.2-neoforge:30.29.0.201") {
 		transitive = false
