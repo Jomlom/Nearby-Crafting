@@ -37,7 +37,6 @@ dependencies {
 
 	modImplementation "com.jomlom.recipebookaccess:recipebookaccess-fabric:${rootProject.rba_version}"
 	modImplementation "maven.modrinth:modmenu:11.0.3"
-	modImplementation "dev.isxander:yet-another-config-lib:3.6.1+1.21-fabric"
 
 	modCompileOnly("mezz.jei:jei-1.21-fabric:19.8.2.99") {
 		transitive = false
