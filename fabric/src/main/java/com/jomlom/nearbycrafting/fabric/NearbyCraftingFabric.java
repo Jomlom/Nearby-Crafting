@@ -8,7 +8,7 @@ public class NearbyCraftingFabric implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		NearbyCraftingConfigFabric.HANDLER.load();
+		NearbyCraftingConfigFabric.load();
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
 				dispatcher.register(NearbyCraftingCommon.buildCommand()));
 		NearbyCraftingCommon.detectContainerBlocks();
