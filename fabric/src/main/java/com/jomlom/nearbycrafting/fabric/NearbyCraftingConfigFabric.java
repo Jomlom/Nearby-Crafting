@@ -2,6 +2,7 @@ package com.jomlom.nearbycrafting.fabric;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jomlom.nearbycrafting.CraftingMode;
 import com.jomlom.nearbycrafting.NearbyCraftingCommon;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -19,14 +20,18 @@ public class NearbyCraftingConfigFabric {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static int defaultReach = 8;
+    public static int defaultDepth = 10;
 
     public static Map<String, Map<String, Boolean>> containerBlockToggles = new HashMap<>();
+
+    public static CraftingMode mode = CraftingMode.DEFAULT;
 
     public static boolean craftingPlayerCanReach = true;
     public static int craftingPlayerReach = defaultReach;
 
     public static boolean craftingTableCanReach = true;
     public static int craftingTableReach = defaultReach;
+    public static int craftingTableDepth = defaultDepth;
 
     public static void load() {
         if (!Files.exists(PATH)) {
@@ -42,6 +47,8 @@ public class NearbyCraftingConfigFabric {
             craftingPlayerReach = data.craftingPlayerReach;
             craftingTableCanReach = data.craftingTableCanReach;
             craftingTableReach = data.craftingTableReach;
+            craftingTableDepth = data.craftingTableDepth;
+            mode = data.mode != null ? data.mode : CraftingMode.DEFAULT;
         } catch (IOException e) {
             NearbyCraftingCommon.LOGGER.error("Failed to load config", e);
         }
@@ -54,6 +61,8 @@ public class NearbyCraftingConfigFabric {
         data.craftingPlayerReach = craftingPlayerReach;
         data.craftingTableCanReach = craftingTableCanReach;
         data.craftingTableReach = craftingTableReach;
+        data.craftingTableDepth = craftingTableDepth;
+        data.mode = mode;
 
         try {
             Files.createDirectories(PATH.getParent());
@@ -71,5 +80,7 @@ public class NearbyCraftingConfigFabric {
         int craftingPlayerReach = 8;
         boolean craftingTableCanReach = true;
         int craftingTableReach = 8;
+        int craftingTableDepth = 10;
+        CraftingMode mode = CraftingMode.DEFAULT;
     }
 }

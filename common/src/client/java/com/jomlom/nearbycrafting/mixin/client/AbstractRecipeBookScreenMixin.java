@@ -69,6 +69,6 @@ public abstract class AbstractRecipeBookScreenMixin<T extends RecipeBookMenu> ex
         this.nearbycrafting$priorityButton.setTooltip(Tooltip.create(Component.empty()
                 .append(Component.translatable(inventoryFirst ? "nearbycrafting.priority.inventory" : "nearbycrafting.priority.nearby"))
                 .append("\n")
-                .append(Component.translatable("nearbycrafting.priority.hint"))));
+                .append(Component.translatable(inventoryFirst ? "nearbycrafting.priority.inventory.hint" : "nearbycrafting.priority.nearby.hint"))));
     }
 }
