@@ -75,6 +75,10 @@ public class NearbyCraftingBlockTogglesScreen extends OptionsSubScreen {
     protected void addOptions() {
         Map<String, Map<String, Boolean>> toggles = new TreeMap<>(Services.CONFIG.containerBlockToggles());
 
+        if (toggles.isEmpty()) {
+            this.list.addSmall(List.of(new StringWidget(0, 0, 310, this.font.lineHeight, Component.translatable("nearbycrafting.config.containerBlocksEmpty"), this.font)));
+        }
+
         for (Map.Entry<String, Map<String, Boolean>> namespaceEntry : toggles.entrySet()) {
             String namespace = namespaceEntry.getKey();
             this.list.addSmall(List.of(new StringWidget(0, 0, 310, this.font.lineHeight, Component.literal(namespace), this.font)));

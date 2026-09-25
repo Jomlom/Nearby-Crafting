@@ -5,20 +5,20 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 
 @Mod(NearbyCraftingCommon.MOD_ID)
 public class NearbyCraftingNeoForge {
 
     public NearbyCraftingNeoForge(IEventBus modEventBus, ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.COMMON, NearbyCraftingConfigNeoForge.SPEC);
-        modEventBus.addListener(this::commonSetup);
         NeoForge.EVENT_BUS.addListener(this::registerCommands);
+        NeoForge.EVENT_BUS.addListener(this::serverAboutToStart);
     }
 
-    private void commonSetup(FMLCommonSetupEvent event) {
+    private void serverAboutToStart(ServerAboutToStartEvent event) {
         NearbyCraftingCommon.detectContainerBlocks();
     }
 
