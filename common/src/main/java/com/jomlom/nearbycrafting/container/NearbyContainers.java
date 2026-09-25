@@ -1,9 +1,13 @@
 package com.jomlom.nearbycrafting.container;
 
+import com.jomlom.nearbycrafting.CraftingMode;
 import com.jomlom.nearbycrafting.NearbyCraftingCommon;
 import com.jomlom.nearbycrafting.mixin.AbstractHorseAccessor;
 import com.jomlom.nearbycrafting.platform.Services;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.equine.AbstractChestedHorse;
@@ -18,11 +22,14 @@ import net.minecraft.world.entity.vehicle.minecart.AbstractMinecartContainer;
 import net.minecraft.world.entity.vehicle.minecart.MinecartHopper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class NearbyContainers {
 
@@ -57,14 +64,29 @@ public class NearbyContainers {
         return toggleIds(INVENTORY_KEYS).contains(blockId) || toggleIds(ENTITY_KEYS).contains(blockId);
     }
 
-    public static List<Container> assemble(Player player, Container inventory, List<Container> blocks, Level level, BlockPos center, int radius) {
-        List<Container> nearby = new ArrayList<>(blocks);
-        AABB area = new AABB(center).inflate(radius);
-        for (Entity entity : level.getEntitiesOfClass(Entity.class, area, NearbyContainers::isEnabledContainerEntity)) {
-            nearby.add(entity instanceof AbstractChestedHorse horse ? ((AbstractHorseAccessor) horse).nearbycrafting$getInventory() : (Container) entity);
+    public static List<Container> forCraftingTable(Player player, Level level, BlockPos pos) {
+        if (Services.CONFIG.mode() == CraftingMode.CONNECTED) {
+            return assemble(player, connectedBlocks(level, pos, Services.CONFIG.craftingTableDepth()), List.of());
         }
+        int radius = Services.CONFIG.craftingTableReach();
+        return assemble(player, blocksInCube(level, pos, radius, false), entitiesInCube(level, pos, radius));
+    }
 
-        List<Container> own = withInventoryContainers(inventory);
+    public static List<Container> forPlayer(Player player) {
+        if (Services.CONFIG.mode() == CraftingMode.CONNECTED) {
+            return assemble(player, List.of(), List.of());
+        }
+        Level level = player.level();
+        BlockPos pos = player.blockPosition();
+        int radius = Services.CONFIG.craftingPlayerReach();
+        return assemble(player, blocksInCube(level, pos, radius, true), entitiesInCube(level, pos, radius));
+    }
+
+    private static List<Container> assemble(Player player, List<Container> blocks, List<Container> entities) {
+        List<Container> nearby = new ArrayList<>(blocks);
+        nearby.addAll(entities);
+
+        List<Container> own = withInventoryContainers(player.getInventory());
         List<Container> containers = new ArrayList<>();
         if (NearbyCraftingCommon.isInventoryFirst(player)) {
             containers.addAll(own);
@@ -72,6 +94,63 @@ public class NearbyContainers {
         } else {
             containers.addAll(nearby);
             containers.addAll(own);
+        }
+        return containers;
+    }
+
+    private static List<Container> blocksInCube(Level level, BlockPos center, int radius, boolean includeCenter) {
+        List<Container> containers = new ArrayList<>();
+        BlockPos.betweenClosedStream(center.offset(-radius, -radius, -radius), center.offset(radius, radius, radius))
+                .forEach(pos -> {
+                    if (!includeCenter && pos.equals(center)) return;
+
+                    Container container = enabledContainerAt(level, pos);
+                    if (container != null) {
+                        containers.add(container);
+                    }
+                });
+        return containers;
+    }
+
+    private static List<Container> connectedBlocks(Level level, BlockPos origin, int depth) {
+        List<Container> containers = new ArrayList<>();
+        Set<BlockPos> visited = new HashSet<>();
+        visited.add(origin);
+        List<BlockPos> frontier = List.of(origin);
+
+        for (int step = 0; step < depth && !frontier.isEmpty(); step++) {
+            List<BlockPos> next = new ArrayList<>();
+            for (BlockPos pos : frontier) {
+                for (Direction direction : Direction.values()) {
+                    BlockPos neighbor = pos.relative(direction);
+                    if (!visited.add(neighbor) || !level.hasChunkAt(neighbor)) continue;
+
+                    Container container = enabledContainerAt(level, neighbor);
+                    if (container != null) {
+                        containers.add(container);
+                        next.add(neighbor);
+                    }
+                }
+            }
+            frontier = next;
+        }
+        return containers;
+    }
+
+    private static @Nullable Container enabledContainerAt(Level level, BlockPos pos) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (!(blockEntity instanceof Container container)) {
+            return null;
+        }
+        Identifier blockId = BuiltInRegistries.BLOCK.getKey(blockEntity.getBlockState().getBlock());
+        return Services.CONFIG.isContainerBlockEnabled(blockId.getNamespace(), blockId.toString()) ? container : null;
+    }
+
+    private static List<Container> entitiesInCube(Level level, BlockPos center, int radius) {
+        List<Container> containers = new ArrayList<>();
+        AABB area = new AABB(center).inflate(radius);
+        for (Entity entity : level.getEntitiesOfClass(Entity.class, area, NearbyContainers::isEnabledContainerEntity)) {
+            containers.add(entity instanceof AbstractChestedHorse horse ? ((AbstractHorseAccessor) horse).nearbycrafting$getInventory() : (Container) entity);
         }
         return containers;
     }
