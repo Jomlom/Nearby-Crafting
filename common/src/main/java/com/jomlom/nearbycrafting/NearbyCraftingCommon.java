@@ -1,5 +1,6 @@
 package com.jomlom.nearbycrafting;
 
+import com.jomlom.nearbycrafting.container.NearbyContainers;
 import com.jomlom.nearbycrafting.platform.Services;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -13,6 +14,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -22,11 +24,26 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class NearbyCraftingCommon {
 
     public static final String MOD_ID = "nearbycrafting";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+    private static final Map<Player, Boolean> NEARBY_FIRST = Collections.synchronizedMap(new WeakHashMap<>());
+
+    public static boolean isInventoryFirst(Player player) {
+        return !NEARBY_FIRST.containsKey(player);
+    }
+
+    public static void setInventoryFirst(Player player, boolean inventoryFirst) {
+        if (inventoryFirst) {
+            NEARBY_FIRST.remove(player);
+        } else {
+            NEARBY_FIRST.put(player, true);
+        }
+    }
 
     public static void detectContainerBlocks() {
         Map<String, Map<String, Boolean>> toggles = Services.CONFIG.containerBlockToggles();
@@ -56,6 +73,12 @@ public class NearbyCraftingCommon {
                     .containsKey(blockId.toString())) {
                 builder.suggest(blockId.toString());
             }
+        }
+        for (String key : NearbyContainers.INVENTORY_KEYS) {
+            builder.suggest(NearbyContainers.toggleId(key));
+        }
+        for (String key : NearbyContainers.ENTITY_KEYS) {
+            builder.suggest(NearbyContainers.toggleId(key));
         }
         return builder.buildFuture();
     };

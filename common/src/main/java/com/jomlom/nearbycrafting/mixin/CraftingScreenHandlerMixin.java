@@ -1,5 +1,6 @@
 package com.jomlom.nearbycrafting.mixin;
 
+import com.jomlom.nearbycrafting.container.NearbyContainers;
 import com.jomlom.nearbycrafting.platform.Services;
 import com.jomlom.recipebookaccess.api.RecipeBookInventoryProvider;
 import net.minecraft.core.BlockPos;
@@ -32,6 +33,7 @@ public abstract class CraftingScreenHandlerMixin implements RecipeBookInventoryP
             return List.of(player.getInventory());
         }
 
+        List<Container> blocks = new ArrayList<>();
         List<Container> inventories = new ArrayList<>();
 
         access.execute((world, pos) -> {
@@ -45,16 +47,20 @@ public abstract class CraftingScreenHandlerMixin implements RecipeBookInventoryP
                         if (blockEntity instanceof Container inventory) {
                             Identifier blockId = BuiltInRegistries.BLOCK.getKey(blockEntity.getBlockState().getBlock());
                             if (isBlockEnabled(blockId)) {
-                                inventories.add(inventory);
+                                blocks.add(inventory);
                             }
                         }
                     });
 
-            // Always add player's own inventory
-            inventories.add(player.getInventory());
+            inventories.addAll(NearbyContainers.assemble(player, player.getInventory(), blocks, world, pos, radius));
         });
 
         return inventories;
+    }
+
+    @Override
+    public boolean isActive() {
+        return Services.CONFIG.craftingTableCanReach();
     }
 
     @Unique

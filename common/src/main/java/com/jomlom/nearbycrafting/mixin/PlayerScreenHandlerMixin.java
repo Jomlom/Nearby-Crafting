@@ -1,5 +1,6 @@
 package com.jomlom.nearbycrafting.mixin;
 
+import com.jomlom.nearbycrafting.container.NearbyContainers;
 import com.jomlom.nearbycrafting.platform.Services;
 import com.jomlom.recipebookaccess.api.RecipeBookInventoryProvider;
 import net.minecraft.core.BlockPos;
@@ -28,7 +29,7 @@ public abstract class PlayerScreenHandlerMixin implements RecipeBookInventoryPro
         if (!Services.CONFIG.craftingPlayerCanReach()) { return List.of(owner.getInventory()); }
         Level world = owner.level();
         BlockPos playerPos = owner.blockPosition();
-        List<Container> inventories = new ArrayList<>();
+        List<Container> blocks = new ArrayList<>();
         int radius = Services.CONFIG.craftingPlayerReach();
         BlockPos.betweenClosedStream(playerPos.offset(-radius, -radius, -radius), playerPos.offset(radius, radius, radius))
                 .forEach(currentPos -> {
@@ -36,12 +37,16 @@ public abstract class PlayerScreenHandlerMixin implements RecipeBookInventoryPro
                     if (blockEntity instanceof Container inventory) {
                         Identifier blockId = BuiltInRegistries.BLOCK.getKey(blockEntity.getBlockState().getBlock());
                         if (isBlockEnabled(blockId)) {
-                            inventories.add(inventory);
+                            blocks.add(inventory);
                         }
                     }
                 });
-        inventories.add(owner.getInventory());
-        return inventories;
+        return NearbyContainers.assemble(owner, owner.getInventory(), blocks, world, playerPos, radius);
+    }
+
+    @Override
+    public boolean isActive() {
+        return Services.CONFIG.craftingPlayerCanReach();
     }
 
     @Unique
