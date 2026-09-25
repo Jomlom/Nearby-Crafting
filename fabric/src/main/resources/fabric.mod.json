@@ -26,6 +26,10 @@
 	},
 	"mixins": [
 		"nearbycrafting.mixins.json",
+		{
+			"config": "nearbycrafting.client.mixins.json",
+			"environment": "client"
+		},
 		"nearbycrafting.farmersdelight.mixins.json"
 	],
 	"depends": {
@@ -33,7 +37,7 @@
 		"minecraft": ">=26.2 <26.3",
 		"java": ">=25",
 		"fabric-api": "*",
-		"recipebookaccess": ">=1.3.1",
+		"recipebookaccess": ">=1.4.0",
 		"modmenu": ">=18.0.0"
 	}
 }

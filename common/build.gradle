@@ -11,7 +11,7 @@ dependencies {
 
 	implementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
 
-	implementation files(rootProject.file("libs/recipebookaccess-1.1.1.jar"))
+	implementation files(rootProject.file("libs/recipebookaccess-1.4.0.jar"))
 
 	compileOnly("mezz.jei:jei-26.2-fabric:30.29.0.201") {
 		transitive = false

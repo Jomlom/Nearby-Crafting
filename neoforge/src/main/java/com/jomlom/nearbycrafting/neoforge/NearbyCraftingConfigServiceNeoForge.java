@@ -70,6 +70,7 @@ public class NearbyCraftingConfigServiceNeoForge implements NearbyCraftingConfig
 
     @Override
     public void save() {
+        NearbyCraftingConfigNeoForge.SPEC.save();
         ContainerBlockTogglesStorage.save(containerBlockToggles);
     }
 }

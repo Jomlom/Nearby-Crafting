@@ -4,6 +4,7 @@
   "package": "com.jomlom.nearbycrafting.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "AbstractHorseAccessor",
     "CraftingScreenHandlerMixin",
     "PlayerScreenHandlerMixin"
   ],
