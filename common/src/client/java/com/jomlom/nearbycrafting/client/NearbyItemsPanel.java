@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.item.ItemStack;
@@ -43,13 +44,11 @@ public class NearbyItemsPanel {
     private static final int SCALED_COUNT_OFFSET_Y = 12;
     private static final float SCALED_COUNT_Z = 200.0F;
 
-    private static final int BLACK = 0xFF000000;
     private static final int WHITE = 0xFFFFFFFF;
-    private static final int PANEL_BODY = 0xFFC6C6C6;
-    private static final int PANEL_SHADOW = 0xFF555555;
-    private static final int SLOT_BODY = 0xFF8B8B8B;
-    private static final int SLOT_SHADOW = 0xFF373737;
     private static final int TITLE_COLOR = 0xFF404040;
+
+    private static final ResourceLocation PANEL_SPRITE = ResourceLocation.withDefaultNamespace("recipe_book/overlay_recipe");
+    private static final ResourceLocation SLOT_SPRITE = ResourceLocation.withDefaultNamespace("container/slot");
 
     private static final Component TITLE = Component.translatable("nearbycrafting.panel.title");
 
@@ -79,13 +78,13 @@ public class NearbyItemsPanel {
 
         int x = leftPos;
         int y = topPos - PANEL_HEIGHT - PANEL_GAP;
-        drawPanel(graphics, x, y, PANEL_WIDTH, PANEL_HEIGHT);
+        graphics.blitSprite(PANEL_SPRITE, x, y, PANEL_WIDTH, PANEL_HEIGHT);
         graphics.drawString(font, TITLE, x + PADDING, y + TITLE_TOP, TITLE_COLOR, false);
 
         int slotY = y + TITLE_TOP + TITLE_HEIGHT;
         for (int i = 0; i < SLOTS; i++) {
             int slotX = x + PADDING + i * SLOT_SIZE;
-            drawSlot(graphics, slotX, slotY);
+            graphics.blitSprite(SLOT_SPRITE, slotX, slotY, SLOT_SIZE, SLOT_SIZE);
             if (i < items.size()) {
                 drawItem(graphics, font, items.get(i), slotX + ITEM_INSET, slotY + ITEM_INSET);
             }
@@ -193,25 +192,5 @@ public class NearbyItemsPanel {
         graphics.pose().scale(COUNT_SCALE, COUNT_SCALE, 1.0F);
         graphics.drawString(font, text, 0, 0, color, shadow);
         graphics.pose().popPose();
-    }
-
-    private static void drawSlot(GuiGraphics graphics, int x, int y) {
-        graphics.fill(x, y, x + SLOT_SIZE, y + SLOT_SIZE, SLOT_BODY);
-        graphics.fill(x, y, x + SLOT_SIZE - 1, y + 1, SLOT_SHADOW);
-        graphics.fill(x, y, x + 1, y + SLOT_SIZE - 1, SLOT_SHADOW);
-        graphics.fill(x + 1, y + SLOT_SIZE - 1, x + SLOT_SIZE, y + SLOT_SIZE, WHITE);
-        graphics.fill(x + SLOT_SIZE - 1, y + 1, x + SLOT_SIZE, y + SLOT_SIZE, WHITE);
-    }
-
-    private static void drawPanel(GuiGraphics graphics, int x, int y, int width, int height) {
-        graphics.fill(x + 1, y, x + width - 1, y + 1, BLACK);
-        graphics.fill(x, y + 1, x + width, y + height - 1, BLACK);
-        graphics.fill(x + 1, y + height - 1, x + width - 1, y + height, BLACK);
-        graphics.fill(x + 1, y + 1, x + width - 1, y + height - 1, PANEL_BODY);
-        graphics.fill(x + 1, y + 1, x + width - 2, y + 3, WHITE);
-        graphics.fill(x + 1, y + 1, x + 3, y + height - 2, WHITE);
-        graphics.fill(x + 2, y + height - 3, x + width - 1, y + height - 1, PANEL_SHADOW);
-        graphics.fill(x + width - 3, y + 2, x + width - 1, y + height - 1, PANEL_SHADOW);
-        graphics.fill(x + 3, y + 3, x + width - 3, y + height - 3, PANEL_BODY);
     }
 }
