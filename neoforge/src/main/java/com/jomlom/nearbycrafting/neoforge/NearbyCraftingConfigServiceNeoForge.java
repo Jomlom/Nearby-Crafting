@@ -1,5 +1,6 @@
 package com.jomlom.nearbycrafting.neoforge;
 
+import com.jomlom.nearbycrafting.CraftingMode;
 import com.jomlom.nearbycrafting.platform.NearbyCraftingConfigService;
 
 import java.util.HashMap;
@@ -8,6 +9,16 @@ import java.util.Map;
 public class NearbyCraftingConfigServiceNeoForge implements NearbyCraftingConfigService {
 
     private final Map<String, Map<String, Boolean>> containerBlockToggles = ContainerBlockTogglesStorage.load();
+
+    @Override
+    public CraftingMode mode() {
+        return NearbyCraftingConfigNeoForge.MODE.get();
+    }
+
+    @Override
+    public void setMode(CraftingMode value) {
+        NearbyCraftingConfigNeoForge.MODE.set(value);
+    }
 
     @Override
     public boolean craftingPlayerCanReach() {
@@ -50,6 +61,16 @@ public class NearbyCraftingConfigServiceNeoForge implements NearbyCraftingConfig
     }
 
     @Override
+    public int craftingTableDepth() {
+        return NearbyCraftingConfigNeoForge.CRAFTING_TABLE_DEPTH.get();
+    }
+
+    @Override
+    public void setCraftingTableDepth(int value) {
+        NearbyCraftingConfigNeoForge.CRAFTING_TABLE_DEPTH.set(value);
+    }
+
+    @Override
     public boolean isContainerBlockEnabled(String namespace, String blockId) {
         return containerBlockToggles
                 .getOrDefault(namespace, Map.of())
@@ -70,6 +91,7 @@ public class NearbyCraftingConfigServiceNeoForge implements NearbyCraftingConfig
 
     @Override
     public void save() {
+        NearbyCraftingConfigNeoForge.SPEC.save();
         ContainerBlockTogglesStorage.save(containerBlockToggles);
     }
 }

@@ -1,5 +1,6 @@
 package com.jomlom.nearbycrafting;
 
+import com.jomlom.nearbycrafting.container.NearbyContainers;
 import com.jomlom.nearbycrafting.platform.Services;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -13,6 +14,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -22,11 +24,26 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class NearbyCraftingCommon {
 
     public static final String MOD_ID = "nearbycrafting";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+    private static final Map<Player, Boolean> NEARBY_FIRST = Collections.synchronizedMap(new WeakHashMap<>());
+
+    public static boolean isInventoryFirst(Player player) {
+        return !NEARBY_FIRST.containsKey(player);
+    }
+
+    public static void setInventoryFirst(Player player, boolean inventoryFirst) {
+        if (inventoryFirst) {
+            NEARBY_FIRST.remove(player);
+        } else {
+            NEARBY_FIRST.put(player, true);
+        }
+    }
 
     public static void detectContainerBlocks() {
         Map<String, Map<String, Boolean>> toggles = Services.CONFIG.containerBlockToggles();
@@ -57,6 +74,12 @@ public class NearbyCraftingCommon {
                 builder.suggest(blockId.toString());
             }
         }
+        for (String key : NearbyContainers.INVENTORY_KEYS) {
+            builder.suggest(NearbyContainers.toggleId(key));
+        }
+        for (String key : NearbyContainers.ENTITY_KEYS) {
+            builder.suggest(NearbyContainers.toggleId(key));
+        }
         return builder.buildFuture();
     };
 
@@ -65,6 +88,16 @@ public class NearbyCraftingCommon {
 
                 // Operator permission
                 .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+
+                // Mode subcommand
+                .then(Commands.literal("mode")
+                        .then(Commands.literal("default")
+                                .executes(context -> setMode(context, CraftingMode.DEFAULT)))
+                        .then(Commands.literal("connected")
+                                .executes(context -> setMode(context, CraftingMode.CONNECTED)))
+                        .then(Commands.literal("get")
+                                .executes(NearbyCraftingCommon::getMode))
+                )
 
                 // Crafting Table subcommand
                 .then(Commands.literal("craftingTable")
@@ -77,6 +110,11 @@ public class NearbyCraftingCommon {
                                         .executes(context -> setCraftingTableReach(context, IntegerArgumentType.getInteger(context, "radius")))))
                         .then(Commands.literal("getReach")
                                 .executes(NearbyCraftingCommon::getCraftingTableReach))
+                        .then(Commands.literal("setDepth")
+                                .then(Commands.argument("depth", IntegerArgumentType.integer(1, 50))
+                                        .executes(context -> setCraftingTableDepth(context, IntegerArgumentType.getInteger(context, "depth")))))
+                        .then(Commands.literal("getDepth")
+                                .executes(NearbyCraftingCommon::getCraftingTableDepth))
                 )
 
                 // Player Inventory Crafting subcommand
@@ -169,6 +207,36 @@ public class NearbyCraftingCommon {
         int radius = Services.CONFIG.craftingTableReach();
         context.getSource().sendSuccess(() ->
                 Component.literal("Crafting Table reach radius: " + radius), false);
+        return 1;
+    }
+
+    private static int setCraftingTableDepth(CommandContext<CommandSourceStack> context, int depth) {
+        Services.CONFIG.setCraftingTableDepth(depth);
+        Services.CONFIG.save();
+        context.getSource().sendSuccess(() ->
+                Component.literal("Crafting Table connected depth set to: " + depth), true);
+        return 1;
+    }
+
+    private static int getCraftingTableDepth(CommandContext<CommandSourceStack> context) {
+        int depth = Services.CONFIG.craftingTableDepth();
+        context.getSource().sendSuccess(() ->
+                Component.literal("Crafting Table connected depth: " + depth), false);
+        return 1;
+    }
+
+    private static int setMode(CommandContext<CommandSourceStack> context, CraftingMode mode) {
+        Services.CONFIG.setMode(mode);
+        Services.CONFIG.save();
+        context.getSource().sendSuccess(() ->
+                Component.literal("Crafting mode set to: " + mode.name().toLowerCase()), true);
+        return 1;
+    }
+
+    private static int getMode(CommandContext<CommandSourceStack> context) {
+        CraftingMode mode = Services.CONFIG.mode();
+        context.getSource().sendSuccess(() ->
+                Component.literal("Crafting mode: " + mode.name().toLowerCase()), false);
         return 1;
     }
 

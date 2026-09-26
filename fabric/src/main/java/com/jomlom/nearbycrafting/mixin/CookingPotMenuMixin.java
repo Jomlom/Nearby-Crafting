@@ -1,22 +1,18 @@
 package com.jomlom.nearbycrafting.mixin;
 
+import com.jomlom.nearbycrafting.container.NearbyContainers;
 import com.jomlom.nearbycrafting.platform.Services;
 import com.jomlom.recipebookaccess.api.RecipeBookInventoryProvider;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import vectorwing.farmersdelight.common.block.entity.CookingPotBlockEntity;
 import vectorwing.farmersdelight.common.block.entity.container.CookingPotMenu;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(CookingPotMenu.class)
@@ -30,39 +26,18 @@ public abstract class CookingPotMenuMixin implements RecipeBookInventoryProvider
     @Override
     public List<Container> getInventoriesForAutofill() {
         Container playerInventory = ((AbstractContainerMenu) (Object) this).getSlot(PLAYER_INVENTORY_START).container;
+        Level world = blockEntity.getLevel();
 
-        if (!Services.CONFIG.craftingTableCanReach()) {
+        if (!Services.CONFIG.craftingTableCanReach() || world == null) {
             return List.of(playerInventory);
         }
 
-        List<Container> inventories = new ArrayList<>();
-        Level world = blockEntity.getLevel();
-        BlockPos pos = blockEntity.getBlockPos();
-
-        if (world != null) {
-            int radius = Services.CONFIG.craftingTableReach();
-
-            BlockPos.betweenClosedStream(pos.offset(-radius, -radius, -radius), pos.offset(radius, radius, radius))
-                    .forEach(currentPos -> {
-                        if (currentPos.equals(pos)) return;
-
-                        BlockEntity nearbyEntity = world.getBlockEntity(currentPos);
-                        if (nearbyEntity instanceof Container inventory) {
-                            Identifier blockId = BuiltInRegistries.BLOCK.getKey(nearbyEntity.getBlockState().getBlock());
-                            if (isBlockEnabled(blockId)) {
-                                inventories.add(inventory);
-                            }
-                        }
-                    });
-        }
-
-        inventories.add(playerInventory);
-        return inventories;
+        return NearbyContainers.forCraftingTable(((Inventory) playerInventory).player, world, blockEntity.getBlockPos());
     }
 
-    @Unique
-    private boolean isBlockEnabled(Identifier blockId) {
-        return Services.CONFIG.isContainerBlockEnabled(blockId.getNamespace(), blockId.toString());
+    @Override
+    public boolean isActive() {
+        return Services.CONFIG.craftingTableCanReach();
     }
 
     @Override

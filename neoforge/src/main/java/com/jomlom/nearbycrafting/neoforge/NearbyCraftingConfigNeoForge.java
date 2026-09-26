@@ -1,18 +1,26 @@
 package com.jomlom.nearbycrafting.neoforge;
 
+import com.jomlom.nearbycrafting.CraftingMode;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class NearbyCraftingConfigNeoForge {
 
     public static final ModConfigSpec SPEC;
 
+    public static final ModConfigSpec.EnumValue<CraftingMode> MODE;
     public static final ModConfigSpec.BooleanValue CRAFTING_PLAYER_CAN_REACH;
     public static final ModConfigSpec.IntValue CRAFTING_PLAYER_REACH;
     public static final ModConfigSpec.BooleanValue CRAFTING_TABLE_CAN_REACH;
     public static final ModConfigSpec.IntValue CRAFTING_TABLE_REACH;
+    public static final ModConfigSpec.IntValue CRAFTING_TABLE_DEPTH;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
+
+        MODE = builder
+                .translation("nearbycrafting.config.mode")
+                .comment("DEFAULT scans a cube around the crafter. CONNECTED only uses containers connected to the crafting table.")
+                .defineEnum("mode", CraftingMode.DEFAULT);
 
         CRAFTING_PLAYER_CAN_REACH = builder
                 .translation("nearbycrafting.config.craftingPlayerCanReach")
@@ -31,6 +39,11 @@ public class NearbyCraftingConfigNeoForge {
                 .translation("nearbycrafting.config.craftingTableReach")
                 .comment("Radius (in blocks) which crafting tables can reach item containers.")
                 .defineInRange("craftingTableReach", 8, 0, 50);
+
+        CRAFTING_TABLE_DEPTH = builder
+                .translation("nearbycrafting.config.depth")
+                .comment("How many containers away from the crafting table are used in connected mode.")
+                .defineInRange("craftingTableDepth", 10, 1, 50);
 
         SPEC = builder.build();
     }

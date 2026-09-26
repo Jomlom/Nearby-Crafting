@@ -1,8 +1,13 @@
 package com.jomlom.nearbycrafting.platform;
 
+import com.jomlom.nearbycrafting.CraftingMode;
+
 import java.util.Map;
 
 public interface NearbyCraftingConfigService {
+
+    CraftingMode mode();
+    void setMode(CraftingMode value);
 
     boolean craftingPlayerCanReach();
     void setCraftingPlayerCanReach(boolean value);
@@ -15,6 +20,9 @@ public interface NearbyCraftingConfigService {
 
     int craftingTableReach();
     void setCraftingTableReach(int value);
+
+    int craftingTableDepth();
+    void setCraftingTableDepth(int value);
 
     boolean isContainerBlockEnabled(String namespace, String blockId);
     void setContainerBlockEnabled(String namespace, String blockId, boolean enabled);

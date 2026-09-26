@@ -6,6 +6,8 @@ sourceSets {
 	main {
 		java.srcDir project(':common').file('src/main/java')
 		resources.srcDir project(':common').file('src/main/resources')
+		java.srcDir project(':common').file('src/client/java')
+		resources.srcDir project(':common').file('src/client/resources')
 	}
 }
 
