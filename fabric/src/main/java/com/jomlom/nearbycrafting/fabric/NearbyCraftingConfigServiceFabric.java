@@ -1,11 +1,22 @@
 package com.jomlom.nearbycrafting.fabric;
 
+import com.jomlom.nearbycrafting.CraftingMode;
 import com.jomlom.nearbycrafting.platform.NearbyCraftingConfigService;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class NearbyCraftingConfigServiceFabric implements NearbyCraftingConfigService {
+
+    @Override
+    public CraftingMode mode() {
+        return NearbyCraftingConfigFabric.mode;
+    }
+
+    @Override
+    public void setMode(CraftingMode value) {
+        NearbyCraftingConfigFabric.mode = value;
+    }
 
     @Override
     public boolean craftingPlayerCanReach() {
@@ -45,6 +56,16 @@ public class NearbyCraftingConfigServiceFabric implements NearbyCraftingConfigSe
     @Override
     public void setCraftingTableReach(int value) {
         NearbyCraftingConfigFabric.craftingTableReach = value;
+    }
+
+    @Override
+    public int craftingTableDepth() {
+        return NearbyCraftingConfigFabric.craftingTableDepth;
+    }
+
+    @Override
+    public void setCraftingTableDepth(int value) {
+        NearbyCraftingConfigFabric.craftingTableDepth = value;
     }
 
     @Override
