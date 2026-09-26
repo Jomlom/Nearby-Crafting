@@ -16,6 +16,9 @@ Allows the crafting table to access nearby chests or other containers, because t
 config="nearbycrafting.mixins.json"
 
 [[mixins]]
+config="nearbycrafting.client.mixins.json"
+
+[[mixins]]
 config="nearbycrafting.farmersdelight.mixins.json"
 
 [[dependencies.${mod_id}]]
@@ -35,6 +38,6 @@ config="nearbycrafting.farmersdelight.mixins.json"
 [[dependencies.${mod_id}]]
     modId="recipebookaccess"
     type="required"
-    versionRange="[1.2.0,)"
+    versionRange="[1.4.0,)"
     ordering="AFTER"
     side="BOTH"

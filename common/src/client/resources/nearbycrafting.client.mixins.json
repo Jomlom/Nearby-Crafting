@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.jomlom.nearbycrafting.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "RecipeBookScreenMixin",
+    "RecipeBookComponentAccessor",
+    "RecipeBookPageAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
