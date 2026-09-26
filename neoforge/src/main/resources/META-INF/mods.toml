@@ -29,6 +29,6 @@ Allows the crafting table to access nearby chests or other containers, because t
 [[dependencies.${mod_id}]]
     modId="recipebookaccess"
     mandatory=true
-    versionRange="[1.2.0,)"
+    versionRange="[1.4.0,)"
     ordering="AFTER"
     side="BOTH"

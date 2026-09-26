@@ -6,6 +6,8 @@ sourceSets {
 	main {
 		java.srcDir project(':common').file('src/main/java')
 		resources.srcDir project(':common').file('src/main/resources')
+		java.srcDir project(':common').file('src/client/java')
+		resources.srcDir project(':common').file('src/client/resources')
 	}
 }
 
@@ -49,6 +51,7 @@ mixin {
 	add sourceSets.main, "nearbycrafting.refmap.json"
 	config "nearbycrafting.mixins.json"
 	config "nearbycrafting.farmersdelight.mixins.json"
+	config "nearbycrafting.client.mixins.json"
 }
 
 dependencies {
@@ -64,7 +67,7 @@ processResources {
 
 	doLast {
 		def refmapName = "nearbycrafting.refmap.json"
-		["nearbycrafting.mixins.json", "nearbycrafting.farmersdelight.mixins.json"].each { name ->
+		["nearbycrafting.mixins.json", "nearbycrafting.farmersdelight.mixins.json", "nearbycrafting.client.mixins.json"].each { name ->
 			def file = new File(destinationDir, name)
 			if (file.exists()) {
 				def json = new groovy.json.JsonSlurper().parse(file)
@@ -79,7 +82,7 @@ jar {
 	inputs.property "archivesName", project.base.archivesName
 
 	manifest.attributes([
-			"MixinConfigs": "nearbycrafting.mixins.json,nearbycrafting.farmersdelight.mixins.json"
+			"MixinConfigs": "nearbycrafting.mixins.json,nearbycrafting.farmersdelight.mixins.json,nearbycrafting.client.mixins.json"
 	])
 
 	from(rootProject.file("LICENSE")) {

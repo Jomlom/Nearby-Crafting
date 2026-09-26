@@ -1,5 +1,6 @@
 package com.jomlom.nearbycrafting.clientUtil;
 
+import com.jomlom.nearbycrafting.container.NearbyContainers;
 import com.jomlom.nearbycrafting.platform.Services;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -15,6 +16,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -61,10 +63,23 @@ public class NearbyCraftingBlockTogglesScreen extends Screen {
         this.addRenderableWidget(this.list);
 
         Map<String, Map<String, Boolean>> toggles = new TreeMap<>(Services.CONFIG.containerBlockToggles());
+
+        if (toggles.isEmpty()) {
+            this.list.addRow(new StringWidget(0, 0, 310, this.font.lineHeight, Component.translatable("nearbycrafting.config.containerBlocksEmpty"), this.font));
+        }
+
+        toggles.computeIfAbsent(NearbyContainers.NAMESPACE, key -> new HashMap<>());
+
         for (Map.Entry<String, Map<String, Boolean>> namespaceEntry : toggles.entrySet()) {
             String namespace = namespaceEntry.getKey();
             this.list.addRow(new StringWidget(0, 0, 310, this.font.lineHeight, Component.literal(namespace), this.font));
-            this.addBlockSection(namespace, new ArrayList<>(new TreeMap<>(namespaceEntry.getValue()).keySet()));
+            if (namespace.equals(NearbyContainers.NAMESPACE)) {
+                this.addGroupRows(namespace, NearbyContainers.INVENTORY_GROUP, NearbyContainers.toggleIds(NearbyContainers.INVENTORY_KEYS));
+                this.addGroupRows(namespace, NearbyContainers.ENTITY_GROUP, NearbyContainers.toggleIds(NearbyContainers.ENTITY_KEYS));
+            }
+            List<String> blockIds = new ArrayList<>(new TreeMap<>(namespaceEntry.getValue()).keySet());
+            blockIds.removeIf(NearbyContainers::isToggleId);
+            this.addBlockSection(namespace, blockIds);
         }
 
         this.list.setScrollAmount(this.scrollAmount);
