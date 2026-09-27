@@ -1,6 +1,7 @@
 package com.jomlom.nearbycrafting.clientUtil;
 
 import com.jomlom.nearbycrafting.CraftingMode;
+import com.jomlom.nearbycrafting.client.OperatorStatus;
 import com.jomlom.nearbycrafting.platform.Services;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,6 +26,8 @@ public class NearbyCraftingConfigScreen extends Screen {
     private static final int ROW_HEIGHT = 20;
     private static final int LABEL_HEIGHT = 12;
     private static final int MAX_VALUE = 50;
+    private static final int ICON_GAP = 6;
+    private static final int ICON_WIDTH = 10;
 
     private final Screen parent;
     private final List<RangeField> rangeFields = new ArrayList<>();
@@ -50,9 +53,14 @@ public class NearbyCraftingConfigScreen extends Screen {
 
         int leftX = this.width / 2 - COLUMN_WIDTH - COLUMN_GAP / 2;
         int rightX = this.width / 2 + COLUMN_GAP / 2;
+        int iconX = rightX + COLUMN_WIDTH + ICON_GAP;
+        boolean operator = OperatorStatus.isOperator();
         int y = 32;
 
         this.addRenderableWidget(this.modeButton(leftX, y));
+        if (!operator) {
+            this.addRenderableWidget(operatorWarning(iconX, y));
+        }
         y += ROW_HEIGHT + 8;
 
         boolean connected = Services.CONFIG.mode() == CraftingMode.CONNECTED;
@@ -60,24 +68,35 @@ public class NearbyCraftingConfigScreen extends Screen {
         Range tableRange = connected
                 ? new Range(Component.translatable("nearbycrafting.config.depth"), Services.CONFIG.craftingTableDepth(), 1, Services.CONFIG::setCraftingTableDepth)
                 : new Range(Component.translatable("nearbycrafting.config.reach"), Services.CONFIG.craftingTableReach(), 0, Services.CONFIG::setCraftingTableReach);
-        y = this.addCategory(leftX, rightX, y, Component.translatable("nearbycrafting.config.craftingTable"),
-                Services.CONFIG.craftingTableCanReach(), Services.CONFIG::setCraftingTableCanReach, tableRange);
+        y = this.addCategory(leftX, rightX, iconX, y, Component.translatable("nearbycrafting.config.craftingTable"),
+                Services.CONFIG.craftingTableCanReach(), Services.CONFIG::setCraftingTableCanReach, tableRange, operator);
 
         y += 16;
 
         Range playerRange = connected
                 ? null
                 : new Range(Component.translatable("nearbycrafting.config.reach"), Services.CONFIG.craftingPlayerReach(), 0, Services.CONFIG::setCraftingPlayerReach);
-        this.addCategory(leftX, rightX, y, Component.translatable("nearbycrafting.config.playerInventoryCrafting"),
-                Services.CONFIG.craftingPlayerCanReach(), Services.CONFIG::setCraftingPlayerCanReach, playerRange);
+        this.addCategory(leftX, rightX, iconX, y, Component.translatable("nearbycrafting.config.playerInventoryCrafting"),
+                Services.CONFIG.craftingPlayerCanReach(), Services.CONFIG::setCraftingPlayerCanReach, playerRange, operator);
+
+        this.addRenderableWidget(Button.builder(Component.translatable("nearbycrafting.panelConfig.title"), button -> {
+                    this.applyRangeValues();
+                    this.minecraft.setScreen(new NearbyCraftingPanelScreen(this));
+                })
+                .pos(leftX, this.height - 52)
+                .size(COLUMN_WIDTH, ROW_HEIGHT)
+                .build());
 
         this.addRenderableWidget(Button.builder(Component.translatable("nearbycrafting.config.containerBlocks"), button -> {
                     this.applyRangeValues();
                     this.minecraft.setScreen(new NearbyCraftingBlockTogglesScreen(this));
                 })
-                .pos(leftX, this.height - 52)
-                .size(COLUMN_WIDTH * 2 + COLUMN_GAP, ROW_HEIGHT)
+                .pos(rightX, this.height - 52)
+                .size(COLUMN_WIDTH, ROW_HEIGHT)
                 .build());
+        if (!operator) {
+            this.addRenderableWidget(operatorWarning(iconX, this.height - 52));
+        }
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
                 .pos(this.width / 2 - 100, this.height - 28)
@@ -101,7 +120,7 @@ public class NearbyCraftingConfigScreen extends Screen {
         return "nearbycrafting.config.mode." + mode.name().toLowerCase();
     }
 
-    private int addCategory(int leftX, int rightX, int y, Component title, boolean enabled, Consumer<Boolean> onToggle, Range range) {
+    private int addCategory(int leftX, int rightX, int iconX, int y, Component title, boolean enabled, Consumer<Boolean> onToggle, Range range, boolean operator) {
         this.addRenderableWidget(new StringWidget(leftX, y, COLUMN_WIDTH * 2 + COLUMN_GAP, LABEL_HEIGHT, title, this.font));
         y += LABEL_HEIGHT + 6;
 
@@ -111,6 +130,9 @@ public class NearbyCraftingConfigScreen extends Screen {
         y += LABEL_HEIGHT + 2;
 
         this.addRenderableWidget(enabledToggle(leftX, y, enabled, onToggle));
+        if (!operator) {
+            this.addRenderableWidget(operatorWarning(iconX, y));
+        }
 
         if (range != null) {
             EditBox box = new EditBox(this.font, rightX, y, COLUMN_WIDTH, ROW_HEIGHT, range.label());
@@ -120,6 +142,12 @@ public class NearbyCraftingConfigScreen extends Screen {
         }
 
         return y + ROW_HEIGHT;
+    }
+
+    private StringWidget operatorWarning(int x, int y) {
+        StringWidget icon = new StringWidget(x, y, ICON_WIDTH, ROW_HEIGHT, Component.literal("!").withStyle(ChatFormatting.RED), this.font);
+        icon.setTooltip(Tooltip.create(Component.translatable("nearbycrafting.config.operatorOnly")));
+        return icon;
     }
 
     private static CycleButton<Boolean> enabledToggle(int x, int y, boolean value, Consumer<Boolean> onToggle) {
