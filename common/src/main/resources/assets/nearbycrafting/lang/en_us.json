@@ -25,5 +25,11 @@
   "nearbycrafting.config.enabled": "Enabled",
   "nearbycrafting.config.disabled": "Disabled",
   "nearbycrafting.config.workstations": "Workstations",
-  "nearbycrafting.config.storage": "Storage"
+  "nearbycrafting.config.storage": "Storage",
+  "nearbycrafting.panelConfig.title": "Panel",
+  "nearbycrafting.panelConfig.enabled": "Show Panel",
+  "nearbycrafting.panelConfig.offsetX": "X Offset",
+  "nearbycrafting.panelConfig.offsetY": "Y Offset",
+  "nearbycrafting.panelConfig.reset": "Reset",
+  "nearbycrafting.config.operatorOnly": "This won't work unless you are an operator or in singleplayer."
 }

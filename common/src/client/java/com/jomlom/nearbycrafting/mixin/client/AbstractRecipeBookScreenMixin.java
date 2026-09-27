@@ -1,6 +1,7 @@
 package com.jomlom.nearbycrafting.mixin.client;
 
 import com.jomlom.nearbycrafting.client.NearbyItemsPanel;
+import com.jomlom.nearbycrafting.client.NearbyItemsPanelConfig;
 import com.jomlom.nearbycrafting.client.PriorityState;
 import com.jomlom.recipebookaccess.api.RecipeBookInventoryProvider;
 import com.jomlom.recipebookaccess.network.ClientItemsReciever;
@@ -52,7 +53,7 @@ public abstract class AbstractRecipeBookScreenMixin<T extends RecipeBookMenu> ex
         if (this.nearbycrafting$priorityButton == null) {
             return;
         }
-        boolean show = ClientItemsReciever.isActive() && this.recipeBookComponent.isVisible();
+        boolean show = ClientItemsReciever.isActive() && this.recipeBookComponent.isVisible() && NearbyItemsPanelConfig.enabled();
         this.nearbycrafting$priorityButton.visible = show;
         if (show) {
             NearbyItemsPanel.extract(graphics, this.font, this.minecraft.player.getInventory(), this.leftPos, this.topPos,
