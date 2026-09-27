@@ -76,18 +76,18 @@ public class NearbyItemsPanel {
     }
 
     public static int buttonX(int leftPos) {
-        return leftPos + SLOTS_END + 1;
+        return leftPos + NearbyItemsPanelConfig.offsetX() + SLOTS_END + 1;
     }
 
     public static int buttonY(int topPos) {
-        return topPos - PANEL_HEIGHT - PANEL_GAP + TITLE_TOP;
+        return topPos + NearbyItemsPanelConfig.offsetY() - PANEL_HEIGHT - PANEL_GAP + TITLE_TOP;
     }
 
     public static void extract(GuiGraphics graphics, Font font, Inventory inventory, int leftPos, int topPos, @Nullable List<Ingredient> requirements) {
         List<NearbyItem> items = visibleItems(inventory, requirements);
 
-        int x = leftPos;
-        int y = topPos - PANEL_HEIGHT - PANEL_GAP;
+        int x = leftPos + NearbyItemsPanelConfig.offsetX();
+        int y = topPos + NearbyItemsPanelConfig.offsetY() - PANEL_HEIGHT - PANEL_GAP;
         drawSprite(graphics, PANEL, x, y);
         drawText(graphics, font, TITLE, x + PADDING, y + TITLE_TOP, TITLE_COLOR, false);
 
